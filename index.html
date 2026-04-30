@@ -739,8 +739,12 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
         <input type="text" id="inputSeller" placeholder="أدخل اسمك هنا..." />
       </div>
       <div class="setup-field">
-        <label>📧 إيميلك</label>
-        <input type="email" id="inputEmail" placeholder="example@email.com" />
+        <label>📧 إيميلك | Your Email</label>
+        <input type="email" id="inputEmail" placeholder="example@email.com"
+          oninput="validateEmailField(this)" />
+        <div id="emailError" style="color:#ef4444;font-size:0.78rem;margin-top:4px;display:none;">
+          ⚠️ يرجى إدخال إيميل صحيح (example@email.com)
+        </div>
       </div>
       <button class="btn-primary" onclick="loginSeller()">🚀 دخول</button>
       <div class="admin-toggle">
@@ -1439,6 +1443,18 @@ let charts = {};
 let ADMIN_PASS_KEY = 'adminPass';
 
 // ========== SETUP ==========
+function validateEmailField(input) {
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+  const err = document.getElementById('emailError');
+  if (input.value && !valid) {
+    input.style.borderColor = 'rgba(239,68,68,0.5)';
+    if (err) err.style.display = 'block';
+  } else {
+    input.style.borderColor = valid ? 'rgba(16,185,129,0.5)' : '';
+    if (err) err.style.display = 'none';
+  }
+}
+
 function showAdminLogin() {
   document.getElementById('sellerForm').style.display = 'none';
   document.getElementById('adminForm').style.display = 'block';
@@ -1452,11 +1468,14 @@ function showSellerForm() {
 function loginSeller() {
   const name = document.getElementById('inputSeller').value.trim();
   const email = document.getElementById('inputEmail').value.trim();
-  if (!name || !email) { showToast('يرجى إدخال اسمك وإيميلك', 'error'); return; }
+  if (!name) { showToast('يرجى إدخال اسمك', 'error'); return; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast('يرجى إدخال إيميل صحيح', 'error');
+    return;
+  }
   currentUser = { name, email, location: '' };
   isAdmin = false;
   apiUrl = FIXED_API_URL;
-  // احفظ بيانات البائع للمرة القادمة
   localStorage.setItem('savedSeller', JSON.stringify({ name, email }));
   startApp();
 }
@@ -1832,21 +1851,74 @@ function collectFormData() {
 }
 
 function validateForm(d) {
-  // كل الحقول اختيارية — فقط نتأكد من وجود بيانات أساسية
+  if (!d.phone) {
+    showToast('⚠️ يرجى إدخال تليفون الزبون', 'error');
+    return false;
+  }
   return true;
 }
 
 async function submitAndSendReceipt() {
   const d = collectFormData();
-
-  if (!d.phone) {
-    showToast('⚠️ يرجى إدخال رقم تليفون الزبون لإرسال الواتساب', 'error');
-    return;
-  }
+  if (!validateForm(d)) return;
 
   const btn = document.getElementById('receiptBtn');
   btn.disabled = true;
   btn.innerHTML = '<div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></div> جاري...';
+
+  const sale = buildSaleObject(d);
+  saveSale(sale); // بدون await — فوري
+
+  // فتح واتساب مباشرة
+  const phone = sale.phone.replace(/[^\d]/g, '');
+  const finalPhone = phone.startsWith('0') ? '20' + phone.slice(1) : phone;
+
+  const prices = [];
+  if (sale.egp > 0) prices.push(`🇪🇬 EGP: ${parseFloat(sale.egp).toFixed(2)}`);
+  if (sale.usd > 0) prices.push(`🇺🇸 USD: $${parseFloat(sale.usd).toFixed(2)}`);
+  if (sale.eur > 0) prices.push(`🇪🇺 EUR: €${parseFloat(sale.eur).toFixed(2)}`);
+  if (sale.gbp > 0) prices.push(`🇬🇧 GBP: £${parseFloat(sale.gbp).toFixed(2)}`);
+
+  const msg =
+`🤿 *HERO DIVING CENTER*
+📞 01140330337
+━━━━━━━━━━━━━━━━━━━━
+🧾 *إيصال بيع | Sales Receipt*
+━━━━━━━━━━━━━━━━━━━━
+📅 Date   : ${sale.date}
+👤 Name   : ${sale.customer || '-'}
+📞 Phone  : ${sale.phone}
+🚢 Boat   : ${sale.boat || '-'}
+🏨 Hotel  : ${sale.hotel || '-'}
+🚪 Room   : ${sale.room || '-'}
+━━━━━━━━━━━━━━━━━━━━
+💰 *Total Payment:*
+${prices.length ? prices.join('\n') : 'To be confirmed'}
+━━━━━━━━━━━━━━━━━━━━
+👨‍💼 Agent : ${sale.seller}
+━━━━━━━━━━━━━━━━━━━━
+_Thank you for choosing Hero Diving Center!_ 🌊🤿`;
+
+  const a = document.createElement('a');
+  a.href = `https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}`;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => document.body.removeChild(a), 100);
+
+  btn.disabled = false;
+  btn.innerHTML = '📱 تسجيل + إرسال واتساب';
+  clearForm();
+  updateMyStats();
+  showToast('✅ تم الحفظ وفتح واتساب!', 'success');
+}
+
+async function submitAndSendReceipt() {
+  const d = collectFormData();
+  if (!validateForm(d)) return;
+
+  const btn = document.getElementById('receiptBtn');
 
   const sale = buildSaleObject(d);
   await saveSale(sale);
@@ -1867,21 +1939,24 @@ async function submitAndSendReceipt() {
   if (sale.gbp > 0) prices.push(`🇬🇧 GBP: £${parseFloat(sale.gbp).toFixed(2)}`);
 
   const msg =
-`🚢 *Booking Receipt*
-━━━━━━━━━━━━━━━━━━
+`🤿 *HERO DIVING CENTER*
+📞 01140330337
+━━━━━━━━━━━━━━━━━━━━
+🧾 *إيصال بيع | Sales Receipt*
+━━━━━━━━━━━━━━━━━━━━
 📅 Date   : ${sale.date}
 👤 Name   : ${sale.customer || '-'}
 📞 Phone  : ${sale.phone}
 🚢 Boat   : ${sale.boat || '-'}
 🏨 Hotel  : ${sale.hotel || '-'}
 🚪 Room   : ${sale.room || '-'}
-━━━━━━━━━━━━━━━━━━
-💰 *Payment Details:*
+━━━━━━━━━━━━━━━━━━━━
+💰 *Total Payment:*
 ${prices.length ? prices.join('\n') : 'To be confirmed'}
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━
 👨‍💼 Agent : ${sale.seller}
-━━━━━━━━━━━━━━━━━━
-_Thank you for booking with us!_ 🌊`;
+━━━━━━━━━━━━━━━━━━━━
+_Thank you for choosing Hero Diving Center!_ 🌊🤿`;
 
   // فتح واتساب مباشرة بدون الخروج من البرنامج
   const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
@@ -1953,17 +2028,18 @@ function clearForm() {
 }
 
 async function saveSale(sale) {
+  // حفظ محلي فوري
   const local = getLocal();
   local.push(sale);
   saveLocal(local);
+  // إرسال للشيت في الخلفية بدون انتظار
   if (apiUrl) {
-    try {
-      await fetch(apiUrl, {
-        method: 'POST', mode: 'no-cors',
-        body: JSON.stringify(sale),
-        headers: { 'Content-Type': 'text/plain' }
-      });
-    } catch(e) {}
+    fetch(apiUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify(sale),
+      headers: { 'Content-Type': 'text/plain' }
+    }).catch(() => {});
   }
 }
 
@@ -1985,121 +2061,42 @@ async function submitSale() {
   showToast('✅ تم حفظ البيعة بنجاح!', 'success');
 }
 
-async function submitAndSendReceipt() {
-  const d = collectFormData();
-  if (!validateForm(d)) return;
-  if (!d.customerEmail) {
-    showToast('⚠️ يرجى إدخال إيميل الزبون لإرسال الإيصال', 'error');
-    return;
-  }
-
-  const btn = document.getElementById('receiptBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white;"></div> جاري الإرسال...';
-
-  const sale = buildSaleObject(d);
-  await saveSale(sale);
-  sendReceiptByEmail(sale);
-
-  btn.disabled = false;
-  btn.innerHTML = '📨 تسجيل وإرسال إيصال';
-  clearForm();
-  updateMyStats();
-  showToast('✅ تم الحفظ وفتح الإيميل!', 'success');
-}
-
-function sendReceiptByEmail(sale) {
-  const prices = [];
-  if (sale.egp > 0) prices.push(`EGP: ${parseFloat(sale.egp).toFixed(2)}`);
-  if (sale.usd > 0) prices.push(`USD: $${parseFloat(sale.usd).toFixed(2)}`);
-  if (sale.eur > 0) prices.push(`EUR: €${parseFloat(sale.eur).toFixed(2)}`);
-  if (sale.gbp > 0) prices.push(`GBP: £${parseFloat(sale.gbp).toFixed(2)}`);
-
-  const priceText = prices.length > 0 ? prices.join(' | ') : 'To be confirmed';
-
-  // رسالة الإيصال
-  const receiptText =
-`Dear ${sale.customer || 'Valued Customer'},
-
-Thank you for booking with us!
-
---- BOOKING RECEIPT ---
-Date     : ${sale.date}
-Customer : ${sale.customer || '-'}
-Phone    : ${sale.phone || '-'}
-Boat     : ${sale.boat || '-'}
-Hotel    : ${sale.hotel || '-'}
-Room     : ${sale.room || '-'}
-Payment  : ${priceText}
------------------------
-Agent    : ${sale.seller}
-Contact  : ${sale.email}
------------------------
-
-We look forward to seeing you on board!
-Best regards, Sales Team`;
-
-  // إرسال بالإيميل
-  if (sale.customerEmail) {
-    const subject = encodeURIComponent('Booking Receipt - Boat Trip');
-    const body = encodeURIComponent(receiptText);
-    const mailLink = `mailto:${sale.customerEmail}?subject=${subject}&body=${body}`;
-    const a = document.createElement('a');
-    a.href = mailLink;
-    a.target = '_blank';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-
-  // إرسال بالواتساب إذا يوجد تليفون
-  if (sale.phone) {
-    const phone = sale.phone.replace(/\D/g, '');
-    const waText = encodeURIComponent(receiptText);
-    setTimeout(() => {
-      const wa = document.createElement('a');
-      wa.href = `https://wa.me/${phone}?text=${waText}`;
-      wa.target = '_blank';
-      document.body.appendChild(wa);
-      wa.click();
-      document.body.removeChild(wa);
-    }, 1000);
-  }
-}
-
 // ========== LOAD MY SALES ==========
 async function loadMySales() {
   const loading = document.getElementById('myLoading');
   if (loading) loading.style.display = 'flex';
 
-  let data = getLocal().filter(s => s.seller === currentUser.name);
+  // عرض البيانات المحلية فوراً
+  const localData = getLocal().filter(s => s.seller === currentUser.name);
+  if (localData.length > 0) {
+    mySalesData = localData;
+    renderMyTable();
+    updateMyStats();
+  }
 
+  // ثم تحديث من Sheets في الخلفية مع timeout
   if (apiUrl) {
     try {
-      // الأدمن يرى كل البيانات، البائع يرى مبيعاته فقط
-      const url = isAdmin
-        ? `${apiUrl}?admin=true`
-        : `${apiUrl}?seller=${encodeURIComponent(currentUser.name)}`;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000); // 8 ثواني max
 
-      const r = await fetch(url);
+      const url = `${apiUrl}?seller=${encodeURIComponent(currentUser.name)}`;
+      const r = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeout);
+
       const remote = await r.json();
-
-      if (Array.isArray(remote) && remote.length > 0) {
-        const filtered = isAdmin
-          ? remote.filter(s => (s['البائع'] || s.seller) === currentUser.name)
-          : remote;
-        const remoteIds = filtered.map(s => String(s['ID'] || s.id));
-        const localOnly = data.filter(s => !remoteIds.includes(String(s.id)));
-        data = [...filtered.map(normalizeRow), ...localOnly];
+      if (Array.isArray(remote)) {
+        const remoteIds = remote.map(s => String(s['ID'] || s.id));
+        const localOnly = localData.filter(s => !remoteIds.includes(String(s.id)));
+        mySalesData = [...remote.map(normalizeRow), ...localOnly];
+        renderMyTable();
+        updateMyStats();
       }
     } catch(e) {
-      console.log('loadMySales error:', e);
+      // timeout أو خطأ — نبقى مع البيانات المحلية
     }
   }
 
-  mySalesData = data;
-  renderMyTable();
-  updateMyStats();
   if (loading) loading.style.display = 'none';
 }
 
