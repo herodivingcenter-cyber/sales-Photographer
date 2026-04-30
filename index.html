@@ -857,8 +857,11 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             <input type="tel" id="fPhone" placeholder="+201234567890" />
           </div>
           <div class="field">
-            <label>📧 إيميل الزبون | Customer Email <span style="color:var(--text-dim);font-size:0.72rem">(اختياري)</span></label>
-            <input type="email" id="fCustomerEmail" placeholder="customer@email.com" />
+            <label>📧 إيميل الزبون | Customer Email <span style="color:#ef4444;font-size:0.75rem;">* مطلوب للحفظ</span></label>
+            <input type="email" id="fCustomerEmail" placeholder="customer@email.com"
+              oninput="this.style.borderColor=''"
+              onfocus="this.style.borderColor='var(--accent)'"
+              onblur="this.style.borderColor=''" />
           </div>
           <div class="field">
             <label>🚢 اسم المركب | Boat Name</label>
@@ -901,11 +904,11 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
           </div>
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
-          <button class="btn-submit" id="submitBtn" onclick="submitSale()">
-            ✅ تسجيل البيعة
-          </button>
           <button class="btn-submit" id="receiptBtn" onclick="submitAndSendReceipt()" style="background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 6px 20px rgba(37,211,102,0.3);">
             📱 تسجيل + إرسال واتساب
+          </button>
+          <button class="btn-submit" id="submitBtn" onclick="submitSale()">
+            ✅ تسجيل البيعة
           </button>
         </div>
       </div>
@@ -2082,6 +2085,19 @@ async function saveSale(sale) {
 async function submitSale() {
   const d = collectFormData();
   if (!validateForm(d)) return;
+
+  // إيميل الزبون مطلوب في زر تسجيل البيعة
+  if (!d.customerEmail) {
+    showToast('⚠️ يرجى إدخال إيميل الزبون', 'error');
+    document.getElementById('fCustomerEmail').focus();
+    document.getElementById('fCustomerEmail').style.borderColor = 'rgba(239,68,68,0.5)';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.customerEmail)) {
+    showToast('⚠️ إيميل الزبون غير صحيح', 'error');
+    document.getElementById('fCustomerEmail').focus();
+    return;
+  }
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
