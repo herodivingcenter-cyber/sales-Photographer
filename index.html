@@ -505,16 +505,33 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
 }
 
 @media (max-width: 768px) {
-  .content { padding: 1rem; }
+  .content { padding: 0.6rem; }
   .charts-grid { grid-template-columns: 1fr; }
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
-  header { padding: 0 1rem; }
-  .form-grid { grid-template-columns: 1fr 1fr; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+  header { padding: 0 0.6rem; }
+  .form-grid { grid-template-columns: 1fr; gap: 0.7rem; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-card { padding: 0; border-radius: 12px; }
+  .table-top { padding: 0.8rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+  table { font-size: 0.78rem; min-width: 600px; }
+  thead th { padding: 0.6rem 0.5rem; font-size: 0.72rem; }
+  tbody td { padding: 0.6rem 0.5rem; }
+  .stat-card { padding: 1rem; border-radius: 12px; }
+  .stat-val { font-size: 1.4rem; }
+  .stat-label { font-size: 0.72rem; }
+  .form-card { padding: 1rem; border-radius: 12px; }
+  .btn-submit { padding: 0.85rem 1.2rem; font-size: 0.9rem; }
+  .app-title { font-size: 0.85rem; }
+  #headerSeller { font-size: 0.78rem; }
+  .nav-tabs { gap: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .nav-tab { font-size: 0.72rem; padding: 0.7rem 0.7rem; white-space: nowrap; }
+  .header-right { gap: 0.4rem; }
+  .btn-logout, .btn-change { padding: 0.4rem 0.7rem; font-size: 0.78rem; }
 }
 
 @media (max-width: 480px) {
-  .form-grid { grid-template-columns: 1fr; }
   .stats-row { grid-template-columns: 1fr 1fr; }
+  .content { padding: 0.4rem; }
 }
 </style>
 </head>
@@ -739,9 +756,11 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
         <input type="text" id="inputSeller" placeholder="أدخل اسمك هنا..." />
       </div>
       <div class="setup-field">
-        <label>📧 إيميلك | Your Email</label>
+        <label>📧 إيميلك | Your Email <span style="color:#ef4444;">*</span></label>
         <input type="email" id="inputEmail" placeholder="example@email.com"
-          oninput="validateEmailField(this)" />
+          required
+          oninput="validateEmailField(this)"
+          style="border-color:rgba(239,68,68,0.3);" />
         <div id="emailError" style="color:#ef4444;font-size:0.78rem;margin-top:4px;display:none;">
           ⚠️ يرجى إدخال إيميل صحيح (example@email.com)
         </div>
@@ -1468,11 +1487,25 @@ function showSellerForm() {
 function loginSeller() {
   const name = document.getElementById('inputSeller').value.trim();
   const email = document.getElementById('inputEmail').value.trim();
-  if (!name) { showToast('يرجى إدخال اسمك', 'error'); return; }
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showToast('يرجى إدخال إيميل صحيح', 'error');
+
+  if (!name) {
+    showToast('⚠️ يرجى إدخال اسمك', 'error');
+    document.getElementById('inputSeller').focus();
     return;
   }
+  if (!email) {
+    showToast('⚠️ يرجى إدخال إيميلك', 'error');
+    document.getElementById('inputEmail').focus();
+    document.getElementById('emailError').style.display = 'block';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast('⚠️ الإيميل غير صحيح — يرجى إدخال إيميل صحيح', 'error');
+    document.getElementById('inputEmail').focus();
+    document.getElementById('emailError').style.display = 'block';
+    return;
+  }
+
   currentUser = { name, email, location: '' };
   isAdmin = false;
   apiUrl = FIXED_API_URL;
@@ -1499,15 +1532,18 @@ function startApp() {
     document.getElementById('settingsUrl').value = apiUrl;
   }
 
-  // ضبط تاريخ اليوم في حقل التاريخ
+  // ضبط تاريخ اليوم
   function getTodayISO() {
     const now = new Date();
-    const offset = now.getTimezoneOffset() * 60000;
-    const local = new Date(now.getTime() - offset);
-    return local.toISOString().slice(0, 10);
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
   if (document.getElementById('fDatePicker')) {
     document.getElementById('fDatePicker').value = getTodayISO();
+    document.getElementById('fDatePicker').style.direction = 'ltr';
+    document.getElementById('fDatePicker').style.textAlign = 'left';
   }
 
   if (document.getElementById('fEmail')) document.getElementById('fEmail').value = currentUser.email || '';
