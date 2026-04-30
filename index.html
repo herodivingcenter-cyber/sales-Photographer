@@ -2070,40 +2070,37 @@ Best regards, Sales Team`;
 // ========== LOAD MY SALES ==========
 async function loadMySales() {
   const loading = document.getElementById('myLoading');
-  loading.style.display = 'flex';
+  if (loading) loading.style.display = 'flex';
 
   let data = getLocal().filter(s => s.seller === currentUser.name);
 
   if (apiUrl) {
     try {
-      const r = await fetch(`${apiUrl}?seller=${encodeURIComponent(currentUser.name)}`, {
-        method: 'GET',
-        mode: 'cors',
-        cache: 'no-cache',
-      });
+      // الأدمن يرى كل البيانات، البائع يرى مبيعاته فقط
+      const url = isAdmin
+        ? `${apiUrl}?admin=true`
+        : `${apiUrl}?seller=${encodeURIComponent(currentUser.name)}`;
+
+      const r = await fetch(url);
       const remote = await r.json();
-      if (Array.isArray(remote)) {
-        const remoteIds = remote.map(s => String(s['ID'] || s.id));
+
+      if (Array.isArray(remote) && remote.length > 0) {
+        const filtered = isAdmin
+          ? remote.filter(s => (s['البائع'] || s.seller) === currentUser.name)
+          : remote;
+        const remoteIds = filtered.map(s => String(s['ID'] || s.id));
         const localOnly = data.filter(s => !remoteIds.includes(String(s.id)));
-        data = [...remote.map(normalizeRow), ...localOnly];
+        data = [...filtered.map(normalizeRow), ...localOnly];
       }
     } catch(e) {
-      try {
-        const r2 = await fetch(`${apiUrl}?seller=${encodeURIComponent(currentUser.name)}`);
-        const remote2 = await r2.json();
-        if (Array.isArray(remote2)) {
-          const remoteIds = remote2.map(s => String(s['ID'] || s.id));
-          const localOnly = data.filter(s => !remoteIds.includes(String(s.id)));
-          data = [...remote2.map(normalizeRow), ...localOnly];
-        }
-      } catch(e2) {}
+      console.log('loadMySales error:', e);
     }
   }
 
   mySalesData = data;
   renderMyTable();
   updateMyStats();
-  loading.style.display = 'none';
+  if (loading) loading.style.display = 'none';
 }
 
 function normalizeRow(r) {
