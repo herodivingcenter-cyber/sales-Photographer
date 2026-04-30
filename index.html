@@ -470,16 +470,17 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
   background: var(--bg3);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 0.7rem 1rem;
+  padding: 0.8rem 1.2rem;
   margin-bottom: 1.2rem;
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 0.82rem;
+  font-size: 0.9rem;
 }
-.sync-status { display: flex; align-items: center; gap: 8px; color: var(--text-dim); }
-.sync-dot { width: 8px; height: 8px; border-radius: 50%; }
-.sync-dot.connected { background: var(--success); box-shadow: 0 0 6px var(--success); }
-.sync-dot.local { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
-.sync-dot.error { background: var(--danger); }
+.sync-status { display: flex; align-items: center; gap: 10px; color: var(--text); font-weight: 600; }
+.sync-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.sync-dot.connected { background: var(--success); box-shadow: 0 0 10px var(--success); animation: pulse 2s infinite; }
+.sync-dot.local { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+.sync-dot.error { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
 .btn-sync {
   background: rgba(59,130,246,0.15);
@@ -830,42 +831,43 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
     <!-- ADD SALE -->
     <div id="panel-add" class="tab-panel active">
 
-      <div class="sync-bar">
+      <div class="sync-bar" id="syncBar" style="display:none;">
         <div class="sync-status">
           <div class="sync-dot" id="syncDot"></div>
-          <span id="syncText">جاري التحقق...</span>
+          <span id="syncText" style="font-size:0.9rem;font-weight:600;">جاري التحقق...</span>
         </div>
         <button class="btn-sync" onclick="checkConnection()">🔄 تحديث</button>
       </div>
 
       <div class="form-card">
         <div class="card-title">➕ تسجيل عملية بيع | New Sale</div>
-        <div class="form-grid">
+        <div class="form-grid" style="gap:1.2rem;">
           <div class="field">
-            <label>📅 التاريخ | Date</label>
+            <label style="font-size:0.95rem;font-weight:700;">📅 التاريخ | Date</label>
             <input type="date" id="fDatePicker"
-              style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;color:var(--text);font-family:'Tajawal',sans-serif;font-size:0.95rem;outline:none;direction:ltr;width:100%;transition:border-color 0.2s;"
+              style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1rem;color:var(--text);font-family:'Tajawal',sans-serif;font-size:1rem;outline:none;direction:ltr;width:100%;transition:border-color 0.2s;"
               onfocus="this.style.borderColor='var(--accent)'"
               onblur="this.style.borderColor='var(--border)'" />
           </div>
           <div class="field">
-            <label>👤 اسم الزبون | Customer Name</label>
-            <input type="text" id="fCustomer" placeholder="Customer name..." />
+            <label style="font-size:0.95rem;font-weight:700;">👤 اسم الزبون | Customer Name</label>
+            <input type="text" id="fCustomer" placeholder="Customer name..." style="font-size:1rem;padding:0.85rem 1rem;" />
           </div>
           <div class="field">
-            <label>📞 تليفون الزبون | Phone</label>
-            <input type="tel" id="fPhone" placeholder="+201234567890" />
+            <label style="font-size:0.95rem;font-weight:700;">📞 تليفون الزبون | Phone <span style="color:#ef4444;font-size:0.8rem;">* مطلوب</span></label>
+            <input type="tel" id="fPhone" placeholder="+201234567890" style="font-size:1rem;padding:0.85rem 1rem;" />
           </div>
           <div class="field">
-            <label>📧 إيميل الزبون | Customer Email <span style="color:#ef4444;font-size:0.75rem;">* مطلوب للحفظ</span></label>
+            <label style="font-size:0.95rem;font-weight:700;">📧 إيميل الزبون | Customer Email <span style="color:#ef4444;font-size:0.8rem;">* مطلوب للحفظ</span></label>
             <input type="email" id="fCustomerEmail" placeholder="customer@email.com"
+              style="font-size:1rem;padding:0.85rem 1rem;"
               oninput="this.style.borderColor=''"
               onfocus="this.style.borderColor='var(--accent)'"
               onblur="this.style.borderColor=''" />
           </div>
           <div class="field">
-            <label>🚢 اسم المركب | Boat Name</label>
-            <select id="fBoat">
+            <label style="font-size:0.95rem;font-weight:700;">🚢 اسم المركب | Boat Name</label>
+            <select id="fBoat" style="font-size:1rem;padding:0.85rem 1rem;">
               <option value="">-- Select Boat --</option>
               <option value="روما">🚢 Roma</option>
               <option value="ادم">🚢 Adam</option>
@@ -875,32 +877,32 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             </select>
           </div>
           <div class="field">
-            <label>🏨 الفندق | Hotel</label>
-            <input type="text" id="fHotel" placeholder="Hotel name..." />
+            <label style="font-size:0.95rem;font-weight:700;">🏨 الفندق | Hotel</label>
+            <input type="text" id="fHotel" placeholder="Hotel name..." style="font-size:1rem;padding:0.85rem 1rem;" />
           </div>
           <div class="field">
-            <label>🚪 رقم الغرفة | Room Number</label>
-            <input type="text" id="fRoom" placeholder="Room number..." />
+            <label style="font-size:0.95rem;font-weight:700;">🚪 رقم الغرفة | Room Number</label>
+            <input type="text" id="fRoom" placeholder="Room number..." style="font-size:1rem;padding:0.85rem 1rem;" />
           </div>
           <div class="field">
-            <label>🇪🇬 سعر جنيه | EGP Price</label>
-            <input type="number" id="fEGP" placeholder="0.00" min="0" step="0.01" />
+            <label style="font-size:0.95rem;font-weight:700;">🇪🇬 سعر جنيه | EGP Price</label>
+            <input type="number" id="fEGP" placeholder="0.00" min="0" step="0.01" style="font-size:1rem;padding:0.85rem 1rem;" />
           </div>
           <div class="field">
-            <label>🇺🇸 سعر دولار | USD Price</label>
-            <input type="number" id="fUSD" placeholder="0.00" min="0" step="0.01" />
+            <label style="font-size:0.95rem;font-weight:700;">🇺🇸 سعر دولار | USD Price</label>
+            <input type="number" id="fUSD" placeholder="0.00" min="0" step="0.01" style="font-size:1rem;padding:0.85rem 1rem;" />
           </div>
           <div class="field">
-            <label>🇪🇺 سعر يورو | EUR Price</label>
-            <input type="number" id="fEUR" placeholder="0.00" min="0" step="0.01" />
+            <label style="font-size:0.95rem;font-weight:700;">🇪🇺 سعر يورو | EUR Price</label>
+            <input type="number" id="fEUR" placeholder="0.00" min="0" step="0.01" style="font-size:1rem;padding:0.85rem 1rem;" />
           </div>
           <div class="field">
-            <label>🇬🇧 سعر إسترليني | GBP Price</label>
-            <input type="number" id="fGBP" placeholder="0.00" min="0" step="0.01" />
+            <label style="font-size:0.95rem;font-weight:700;">🇬🇧 سعر إسترليني | GBP Price</label>
+            <input type="number" id="fGBP" placeholder="0.00" min="0" step="0.01" style="font-size:1rem;padding:0.85rem 1rem;" />
           </div>
           <div class="field">
-            <label>📧 إيميل البائع | Agent Email</label>
-            <input type="email" id="fEmail" readonly style="background:var(--bg4);color:var(--accent2);" />
+            <label style="font-size:0.95rem;font-weight:700;">📧 إيميل البائع | Agent Email</label>
+            <input type="email" id="fEmail" readonly style="background:var(--bg4);color:var(--accent2);font-size:1rem;padding:0.85rem 1rem;" />
           </div>
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
@@ -1577,6 +1579,9 @@ function startApp() {
   }
 
   checkConnection();
+  // علامة الاتصال للأدمن فقط
+  const syncBar = document.getElementById('syncBar');
+  if (syncBar) syncBar.style.display = isAdmin ? 'flex' : 'none';
   loadMySales();
   updateMyStats();
   if (isAdmin) loadAllSales();
