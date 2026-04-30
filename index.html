@@ -908,7 +908,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             📱 تسجيل + إرسال واتساب
           </button>
           <button class="btn-submit" id="submitBtn" onclick="submitSale()">
-            ✅ تسجيل البيعة
+            ✅ تسجيل بيعة + إيميل زبون
           </button>
         </div>
       </div>
@@ -2084,9 +2084,8 @@ async function saveSale(sale) {
 
 async function submitSale() {
   const d = collectFormData();
-  if (!validateForm(d)) return;
 
-  // إيميل الزبون مطلوب في زر تسجيل البيعة
+  // إيميل الزبون مطلوب فقط
   if (!d.customerEmail) {
     showToast('⚠️ يرجى إدخال إيميل الزبون', 'error');
     document.getElementById('fCustomerEmail').focus();
@@ -2107,7 +2106,7 @@ async function submitSale() {
   await saveSale(sale);
 
   btn.disabled = false;
-  btn.innerHTML = '✅ تسجيل البيعة';
+  btn.innerHTML = '✅ تسجيل بيعة + إيميل زبون';
   clearForm();
   updateMyStats();
   showToast('✅ تم حفظ البيعة بنجاح!', 'success');
