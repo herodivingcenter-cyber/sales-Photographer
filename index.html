@@ -100,11 +100,11 @@ body::before {
 
 .setup-field input, .setup-field select {
   width: 100%;
-  background: var(--bg3);
-  border: 1px solid var(--border);
+  background: #e8e8e8;
+  border: 1px solid #cccccc;
   border-radius: 12px;
   padding: 0.85rem 1rem;
-  color: var(--text);
+  color: #222222;
   font-family: 'Tajawal', sans-serif;
   font-size: 1rem;
   outline: none;
@@ -114,10 +114,11 @@ body::before {
 
 .setup-field input:focus, .setup-field select:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  background: #f0f0f0;
 }
 
-.setup-field input::placeholder { color: var(--text-dim); }
+.setup-field input::placeholder { color: #888888; }
 
 .url-hint {
   background: rgba(59,130,246,0.08);
@@ -304,13 +305,14 @@ header {
 .field label { font-size: 0.8rem; font-weight: 600; color: var(--text-dim); }
 
 .field input, .field select {
-  background: var(--bg3);
-  border: 1px solid var(--border);
+  background: #e8e8e8;
+  border: 1px solid #cccccc;
   border-radius: 10px;
   padding: 0.75rem 1rem;
-  color: var(--text);
+  color: #222222;
   font-family: 'Tajawal', sans-serif;
   font-size: 0.95rem;
+  font-weight: 700;
   outline: none;
   transition: all 0.2s;
   direction: rtl;
@@ -318,10 +320,11 @@ header {
 
 .field input:focus, .field select:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  background: #f0f0f0;
 }
 
-.field input::placeholder { color: var(--text-dim); }
+.field input::placeholder { color: #888888; }
 
 .btn-submit {
   background: linear-gradient(135deg, var(--success), #059669);
@@ -845,7 +848,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
           <div class="field">
             <label style="font-size:0.95rem;font-weight:700;">📅 التاريخ | Date</label>
             <input type="date" id="fDatePicker"
-              style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1rem;color:var(--text);font-family:'Tajawal',sans-serif;font-size:1rem;outline:none;direction:ltr;width:100%;transition:border-color 0.2s;"
+              style="background:#e8e8e8;border:1px solid #cccccc;border-radius:10px;padding:0.85rem 1rem;color:#222222;font-family:'Tajawal',sans-serif;font-size:1rem;outline:none;direction:ltr;width:100%;transition:border-color 0.2s;"
               onfocus="this.style.borderColor='var(--accent)'"
               onblur="this.style.borderColor='var(--border)'" />
           </div>
@@ -923,7 +926,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
       <div class="form-card" style="margin-bottom:1.2rem;padding:1rem 1.5rem;">
         <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
           <span style="font-size:0.9rem;font-weight:700;color:var(--accent2);">📅 تاريخ محدد:</span>
-          <input type="date" id="stDateFilter" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.8rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:ltr;font-size:0.85rem;" />
+          <input type="date" id="stDateFilter" style="background:#e8e8e8;border:1px solid #cccccc;border-radius:8px;padding:0.5rem 0.8rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:ltr;font-size:0.85rem;" />
           <button class="btn-sync" onclick="renderStats()" style="padding:0.5rem 1.2rem;">📊 عرض</button>
           <button class="btn-sync" onclick="clearStatsFilter()" style="padding:0.5rem 1rem;">✖ الكل</button>
         </div>
@@ -1075,7 +1078,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
       <div class="form-card" style="margin-bottom:1rem;padding:1rem 1.5rem;">
         <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
           <span style="font-size:0.9rem;font-weight:700;color:var(--accent2);">🔍 بحث بالتاريخ:</span>
-          <input type="date" id="myDateFilter" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.8rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:ltr;font-size:0.85rem;" />
+          <input type="date" id="myDateFilter" style="background:#e8e8e8;border:1px solid #cccccc;border-radius:8px;padding:0.5rem 0.8rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:ltr;font-size:0.85rem;" />
           <button class="btn-sync" onclick="filterMyTable()" style="padding:0.5rem 1rem;">🔍 بحث</button>
           <button class="btn-sync" onclick="clearMyFilter()" style="padding:0.5rem 1rem;">✖ مسح</button>
           <div class="loading" id="myLoading" style="display:none;"><div class="spinner"></div></div>
@@ -1152,10 +1155,10 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
 
         <!-- فلاتر صفحة كل المبيعات -->
         <div style="padding:0.8rem 1.2rem;border-bottom:1px solid var(--border);display:flex;gap:0.8rem;align-items:center;flex-wrap:wrap;">
-          <select id="allSellerFilter" onchange="filterAllTable()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.8rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:rtl;font-size:0.85rem;">
+          <select id="allSellerFilter" onchange="filterAllTable()" style="background:#e8e8e8;border:1px solid #cccccc;border-radius:8px;padding:0.5rem 0.8rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:rtl;font-size:0.85rem;">
             <option value="">👤 كل البائعين | All Sellers</option>
           </select>
-          <input type="date" id="allDateFilter" onchange="filterAllTable()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.8rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:ltr;font-size:0.85rem;" />
+          <input type="date" id="allDateFilter" onchange="filterAllTable()" style="background:#e8e8e8;border:1px solid #cccccc;border-radius:8px;padding:0.5rem 0.8rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:ltr;font-size:0.85rem;" />
           <button class="btn-sync" onclick="clearAllFilter()" style="padding:0.5rem 1rem;">✖ مسح</button>
           <span id="allResultCount" style="font-size:0.82rem;color:var(--text-dim);margin-right:auto;"></span>
         </div>
@@ -1181,17 +1184,17 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
         <div style="display:flex;gap:0.8rem;align-items:flex-end;flex-wrap:wrap;">
           <div class="field" style="flex:1;min-width:130px;">
             <label>📅 التاريخ | Date</label>
-            <input type="date" id="sDate" style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.7rem 0.9rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:ltr;width:100%;" />
+            <input type="date" id="sDate" style="background:#e8e8e8;border:1px solid #cccccc;border-radius:10px;padding:0.7rem 0.9rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:ltr;width:100%;" />
           </div>
           <div class="field" style="flex:1;min-width:130px;">
             <label>👤 البائع | Seller</label>
-            <select id="sSeller" style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.7rem 0.9rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:rtl;width:100%;">
+            <select id="sSeller" style="background:#e8e8e8;border:1px solid #cccccc;border-radius:10px;padding:0.7rem 0.9rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:rtl;width:100%;">
               <option value="">الكل | All</option>
             </select>
           </div>
           <div class="field" style="flex:1;min-width:130px;">
             <label>🚢 المركب | Boat</label>
-            <select id="sBoat" style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.7rem 0.9rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:rtl;width:100%;">
+            <select id="sBoat" style="background:#e8e8e8;border:1px solid #cccccc;border-radius:10px;padding:0.7rem 0.9rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:rtl;width:100%;">
               <option value="">الكل | All</option>
               <option value="روما">Roma</option>
               <option value="ادم">Adam</option>
@@ -1202,11 +1205,11 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
           </div>
           <div class="field" style="flex:1;min-width:130px;">
             <label>🏨 الفندق | Hotel</label>
-            <input type="text" id="sHotel" placeholder="Hotel name..." style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.7rem 0.9rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:rtl;width:100%;" />
+            <input type="text" id="sHotel" placeholder="Hotel name..." style="background:#e8e8e8;border:1px solid #cccccc;border-radius:10px;padding:0.7rem 0.9rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:rtl;width:100%;" />
           </div>
           <div class="field" style="flex:1;min-width:130px;">
             <label>👤 الزبون | Customer</label>
-            <input type="text" id="sCustomer" placeholder="Customer name..." style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.7rem 0.9rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:rtl;width:100%;" />
+            <input type="text" id="sCustomer" placeholder="Customer name..." style="background:#e8e8e8;border:1px solid #cccccc;border-radius:10px;padding:0.7rem 0.9rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:rtl;width:100%;" />
           </div>
           <div style="display:flex;gap:0.6rem;padding-bottom:2px;">
             <button class="btn-submit" onclick="runSearch()" style="padding:0.7rem 1.5rem;white-space:nowrap;">🔍 بحث</button>
@@ -1298,7 +1301,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
           <div style="display:flex;align-items:center;gap:6px;margin-right:auto;">
             <span style="font-size:0.8rem;color:var(--text-dim);">أو اختر يوم:</span>
             <input type="date" id="rDateFilter" onchange="setReportPeriod('custom')"
-              style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.4rem 0.8rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:ltr;font-size:0.82rem;" />
+              style="background:#e8e8e8;border:1px solid #cccccc;border-radius:8px;padding:0.4rem 0.8rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:ltr;font-size:0.82rem;" />
           </div>
           <span id="rFilterLabel" style="font-size:0.8rem;color:var(--gold);font-weight:700;"></span>
         </div>
@@ -1386,7 +1389,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             <label>🇺🇸 سعر الدولار | USD Rate</label>
             <div style="display:flex;align-items:center;gap:8px;">
               <input type="number" id="rateUSD" placeholder="50" min="1" step="0.01"
-                style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;width:100%;" />
+                style="background:#e8e8e8;border:1px solid #cccccc;border-radius:10px;padding:0.75rem 1rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;width:100%;" />
               <span style="color:var(--text-dim);font-size:0.85rem;white-space:nowrap;">جنيه / دولار</span>
             </div>
           </div>
@@ -1394,7 +1397,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             <label>🇪🇺 سعر اليورو | EUR Rate</label>
             <div style="display:flex;align-items:center;gap:8px;">
               <input type="number" id="rateEUR" placeholder="55" min="1" step="0.01"
-                style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;width:100%;" />
+                style="background:#e8e8e8;border:1px solid #cccccc;border-radius:10px;padding:0.75rem 1rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;width:100%;" />
               <span style="color:var(--text-dim);font-size:0.85rem;white-space:nowrap;">جنيه / يورو</span>
             </div>
           </div>
@@ -1402,7 +1405,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             <label>🇬🇧 سعر الإسترليني | GBP Rate</label>
             <div style="display:flex;align-items:center;gap:8px;">
               <input type="number" id="rateGBP" placeholder="63" min="1" step="0.01"
-                style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;width:100%;" />
+                style="background:#e8e8e8;border:1px solid #cccccc;border-radius:10px;padding:0.75rem 1rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;width:100%;" />
               <span style="color:var(--text-dim);font-size:0.85rem;white-space:nowrap;">جنيه / إسترليني</span>
             </div>
           </div>
@@ -1643,9 +1646,16 @@ async function renderStats() {
     myData = myData.filter(s => matchDate(s, dateVal));
   }
 
+  const todayStr = (() => {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,'0');
+    const d = String(now.getDate()).padStart(2,'0');
+    return `${y}-${m}-${d}`;
+  })();
+
   const todayData = mySalesData.filter(s => {
-    const d = s.dateISO ? new Date(s.dateISO) : null;
-    return d && d.toDateString() === today;
+    return extractDateStr(s.date) === todayStr || extractDateStr(s.dateISO) === todayStr;
   });
 
   // إحصائياتي
@@ -1780,14 +1790,11 @@ function runSearch() {
 
   // فلتر التاريخ
   if (dateFrom || dateTo) {
-    const from = dateFrom ? new Date(dateFrom) : null;
-    const to = dateTo ? new Date(dateTo + 'T23:59:59') : null;
-
     data = data.filter(s => {
-      const d = s.dateISO ? new Date(s.dateISO) : parseSearchDate(s.date);
-      if (!d) return true;
-      if (from && d < from) return false;
-      if (to && d > to) return false;
+      const sDate = extractDateStr(s.date) || extractDateStr(s.dateISO);
+      if (!sDate) return true;
+      if (dateFrom && sDate < dateFrom) return false;
+      if (dateTo && sDate > dateTo) return false;
       return true;
     });
   }
@@ -1855,18 +1862,20 @@ async function checkConnection() {
   const dot = document.getElementById('syncDot');
   const txt = document.getElementById('syncText');
   if (!apiUrl) {
-    dot.className = 'sync-dot local';
-    txt.textContent = 'حفظ محلي فقط — أضف رابط Google Script للمزامنة';
+    if(dot) dot.className = 'sync-dot local';
+    if(txt) txt.textContent = 'حفظ محلي فقط';
     return;
   }
-  txt.textContent = 'جاري الاتصال...';
+  if(txt) txt.textContent = 'جاري الاتصال...';
   try {
-    const r = await fetch(apiUrl + '?test=1', { method: 'GET' });
-    dot.className = 'sync-dot connected';
-    txt.textContent = 'متصل بـ Google Sheets ✓';
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 8000);
+    const r = await fetch(apiUrl + '?test=1', { signal: controller.signal });
+    if(dot) dot.className = 'sync-dot connected';
+    if(txt) txt.textContent = '✅ متصل بـ Google Sheets';
   } catch {
-    dot.className = 'sync-dot error';
-    txt.textContent = 'تعذر الاتصال — البيانات تُحفظ محلياً';
+    if(dot) dot.className = 'sync-dot error';
+    if(txt) txt.textContent = '⚠️ تعذر الاتصال — البيانات تُحفظ محلياً';
   }
 }
 
@@ -2159,6 +2168,9 @@ async function loadMySales() {
 function normalizeRow(r) {
   const rawDate = r['التاريخ'] || r.date || '';
   const rawISO  = r['dateISO']  || r.dateISO  || '';
+
+  // الأولوية: rawDate (التاريخ المحفوظ كـ YYYY-MM-DD)
+  // ثم rawISO (dateISO المحفوظ مع البيعة)
   const dateStr = extractDateStr(rawDate) || extractDateStr(rawISO);
 
   return {
@@ -2199,7 +2211,7 @@ function renderMyTable(data) {
     return `
     <tr>
       <td style="color:var(--text-dim)">${rows.length - i}</td>
-      <td style="color:var(--text-dim);font-size:0.8rem">${s.date ? s.date : fmtDate(s.dateISO)}</td>
+      <td style="color:var(--text-dim);font-size:0.8rem">${fmtDate(s.date || s.dateISO)}</td>
       <td><strong>${s.customer || '-'}</strong></td>
       <td style="color:var(--accent2)">${s.phone ? `<a href="https://wa.me/${s.phone.replace(/\D/g,'')}" target="_blank" style="color:var(--success);text-decoration:none;">📱 ${s.phone}</a>` : '-'}</td>
       <td><span class="chip chip-blue">${s.boat || '-'}</span></td>
@@ -2219,8 +2231,9 @@ function renderMyTable(data) {
 function extractDateStr(val) {
   if (!val) return '';
   const s = String(val).trim();
-  // خذ أول 10 أحرف فقط - دائماً YYYY-MM-DD
-  if (s.match(/^\d{4}-\d{2}-\d{2}/)) return s.slice(0, 10);
+  // YYYY-MM-DD مباشرة أو مع T أو مع مسافة
+  const iso = s.match(/^(\d{4}-\d{2}-\d{2})/);
+  if (iso) return iso[1]; // أول 10 أحرف دائماً YYYY-MM-DD
   // DD/MM/YYYY
   const dmy = s.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
   if (dmy) return `${dmy[3]}-${dmy[2]}-${dmy[1]}`;
@@ -2288,7 +2301,7 @@ async function loadAllSales() {
         data = remote.map(normalizeRow);
       }
     } catch(e) {
-      console.log('fetch error:', e);
+      // fetch error suppressed
       // محاولة ثانية بدون headers
       try {
         const r2 = await fetch(`${apiUrl}?admin=true`);
@@ -2297,7 +2310,7 @@ async function loadAllSales() {
           data = remote2.map(normalizeRow);
         }
       } catch(e2) {
-        console.log('fetch error 2:', e2);
+        // fetch error 2 suppressed
       }
     }
   }
@@ -2326,7 +2339,7 @@ function renderAllTable(data) {
     <tr>
       <td style="color:var(--text-dim)">${rev.length - i}</td>
       <td><span class="chip chip-blue">${s.seller || '-'}</span></td>
-      <td style="color:var(--text-dim);font-size:0.8rem">${s.date ? s.date : fmtDate(s.dateISO)}</td>
+      <td style="color:var(--text-dim);font-size:0.8rem">${fmtDate(s.date || s.dateISO)}</td>
       <td><strong>${s.customer || '-'}</strong></td>
       <td>${s.boat || '-'}</td>
       <td><span class="chip chip-green">${s.hotel || '-'}</span></td>
@@ -2412,9 +2425,10 @@ function getFilteredReportData() {
 
   if (currentReportPeriod === 'week') {
     const weekAgo = new Date(now); weekAgo.setDate(now.getDate() - 7);
+    const weekAgoStr = weekAgo.toISOString().slice(0,10);
     const filtered = all.filter(s => {
-      const d = s.dateISO ? new Date(s.dateISO) : new Date(s.date);
-      return !isNaN(d) && d >= weekAgo;
+      const sDate = extractDateStr(s.date) || extractDateStr(s.dateISO);
+      return sDate >= weekAgoStr;
     });
     document.getElementById('rFilterLabel').textContent = `آخر 7 أيام: ${filtered.length} سجل`;
     return filtered;
@@ -2422,8 +2436,8 @@ function getFilteredReportData() {
 
   if (currentReportPeriod === 'month') {
     const filtered = all.filter(s => {
-      const iso = s.dateISO ? s.dateISO.slice(0,7) : (s.date||'').slice(0,7);
-      return iso === todayStr.slice(0,7);
+      const sDate = extractDateStr(s.date) || extractDateStr(s.dateISO);
+      return sDate && sDate.slice(0,7) === todayStr.slice(0,7);
     });
     document.getElementById('rFilterLabel').textContent = `هذا الشهر: ${filtered.length} سجل`;
     return filtered;
@@ -2600,7 +2614,7 @@ function renderSearchResults(data) {
     <tr>
       <td style="color:var(--text-dim)">${data.length-i}</td>
       <td><span class="chip chip-blue">${s.seller||'-'}</span></td>
-      <td style="font-size:0.8rem;color:var(--text-dim)">${s.date ? s.date : fmtDate(s.dateISO)}</td>
+      <td style="font-size:0.8rem;color:var(--text-dim)">${fmtDate(s.date || s.dateISO)}</td>
       <td><strong>${s.customer||'-'}</strong></td>
       <td>${s.phone?`<a href="https://wa.me/${s.phone.replace(/\D/g,'')}" target="_blank" style="color:var(--success);text-decoration:none;">📱 ${s.phone}</a>`:'-'}</td>
       <td><span class="chip chip-blue">${s.boat||'-'}</span></td>
@@ -2790,12 +2804,11 @@ function generateExcel(data, seller, dateVal) {
 // ========== UTILS ==========
 function fmtDate(val) {
   if (!val) return '-';
-  const s = String(val).trim();
-  // YYYY-MM-DD (أول 10 أحرف فقط)
-  const match = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (match) return `${match[3]}/${match[2]}/${match[1]}`;
-  // عربي أو أي نص آخر — اعرضه كما هو
-  return s;
+  // استخرج YYYY-MM-DD أولاً بدون UTC shift
+  const dateStr = extractDateStr(val);
+  if (!dateStr) return String(val).trim();
+  const [y, m, d] = dateStr.split('-');
+  return `${d}/${m}/${y}`;
 }
 
 // ========== AUTO LOGIN ==========
