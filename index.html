@@ -513,29 +513,40 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
   .charts-grid { grid-template-columns: 1fr; }
   .stats-row { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
   header { padding: 0 0.6rem; }
-  .form-grid { grid-template-columns: 1fr; gap: 0.7rem; }
+  .form-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
   .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .table-card { padding: 0; border-radius: 12px; }
   .table-top { padding: 0.8rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
   table { font-size: 0.78rem; min-width: 600px; }
   thead th { padding: 0.6rem 0.5rem; font-size: 0.72rem; }
   tbody td { padding: 0.6rem 0.5rem; }
-  .stat-card { padding: 1rem; border-radius: 12px; }
-  .stat-val { font-size: 1.4rem; }
-  .stat-label { font-size: 0.72rem; }
-  .form-card { padding: 1rem; border-radius: 12px; }
-  .btn-submit { padding: 0.85rem 1.2rem; font-size: 0.9rem; }
-  .app-title { font-size: 0.85rem; }
-  #headerSeller { font-size: 0.78rem; }
+  .stat-card { padding: 0.8rem; border-radius: 12px; }
+  .stat-val { font-size: 1.3rem; }
+  .stat-label { font-size: 0.70rem; }
+  .form-card { padding: 0.8rem; border-radius: 12px; }
+  .field input, .field select {
+    padding: 0.55rem 0.75rem !important;
+    font-size: 0.95rem !important;
+    border-radius: 8px;
+  }
+  .field label { font-size: 0.82rem !important; margin-bottom: 3px; }
+  /* حقول الأسعار أصغر */
+  .price-field {
+    padding: 0.35rem 0.5rem !important;
+    font-size: 0.88rem !important;
+    text-align: center;
+  }
+  .btn-submit { padding: 0.75rem 1rem; font-size: 0.88rem; }
+  .app-title { font-size: 0.82rem; }
   .nav-tabs { gap: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
-  .nav-tab { font-size: 0.72rem; padding: 0.7rem 0.7rem; white-space: nowrap; }
-  .header-right { gap: 0.4rem; }
-  .btn-logout, .btn-change { padding: 0.4rem 0.7rem; font-size: 0.78rem; }
+  .nav-tab { font-size: 0.70rem; padding: 0.6rem 0.6rem; white-space: nowrap; }
+  .header-right { gap: 0.3rem; }
 }
 
 @media (max-width: 480px) {
   .stats-row { grid-template-columns: 1fr 1fr; }
   .content { padding: 0.4rem; }
+  .form-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
 }
 </style>
 </head>
@@ -889,19 +900,19 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
           </div>
           <div class="field">
             <label style="font-size:0.95rem;font-weight:700;">🇪🇬 سعر جنيه | EGP Price</label>
-            <input type="number" id="fEGP" placeholder="0.00" min="0" step="0.01" style="font-size:1rem;padding:0.85rem 1rem;" />
+            <input type="number" id="fEGP" placeholder="0.00" min="0" step="0.01" class="price-field" style="font-size:1rem;padding:0.85rem 1rem;background:#fff3cd;border:2px solid #f59e0b;color:#92400e;font-weight:700;" />
           </div>
           <div class="field">
             <label style="font-size:0.95rem;font-weight:700;">🇺🇸 سعر دولار | USD Price</label>
-            <input type="number" id="fUSD" placeholder="0.00" min="0" step="0.01" style="font-size:1rem;padding:0.85rem 1rem;" />
+            <input type="number" id="fUSD" placeholder="0.00" min="0" step="0.01" class="price-field" style="font-size:1rem;padding:0.85rem 1rem;background:#dbeafe;border:2px solid #3b82f6;color:#1e3a5f;font-weight:700;" />
           </div>
           <div class="field">
             <label style="font-size:0.95rem;font-weight:700;">🇪🇺 سعر يورو | EUR Price</label>
-            <input type="number" id="fEUR" placeholder="0.00" min="0" step="0.01" style="font-size:1rem;padding:0.85rem 1rem;" />
+            <input type="number" id="fEUR" placeholder="0.00" min="0" step="0.01" class="price-field" style="font-size:1rem;padding:0.85rem 1rem;background:#d1fae5;border:2px solid #10b981;color:#064e3b;font-weight:700;" />
           </div>
           <div class="field">
             <label style="font-size:0.95rem;font-weight:700;">🇬🇧 سعر إسترليني | GBP Price</label>
-            <input type="number" id="fGBP" placeholder="0.00" min="0" step="0.01" style="font-size:1rem;padding:0.85rem 1rem;" />
+            <input type="number" id="fGBP" placeholder="0.00" min="0" step="0.01" class="price-field" style="font-size:1rem;padding:0.85rem 1rem;background:#ede9fe;border:2px solid #8b5cf6;color:#3b0764;font-weight:700;" />
           </div>
           <div class="field">
             <label style="font-size:0.95rem;font-weight:700;">📧 إيميل البائع | Agent Email</label>
@@ -912,8 +923,8 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
           <button class="btn-submit" id="receiptBtn" onclick="submitAndSendReceipt()" style="background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 6px 20px rgba(37,211,102,0.3);">
             📱 تسجيل + إرسال واتساب
           </button>
-          <button class="btn-submit" id="submitBtn" onclick="submitSale()">
-            ✅ تسجيل بيعة + إيميل زبون
+          <button class="btn-submit" id="submitBtn" onclick="submitSale()" style="background:linear-gradient(135deg,#6366f1,#4f46e5);box-shadow:0 6px 20px rgba(99,102,241,0.35);">
+            📧 تسجيل بيعة + إيميل زبون
           </button>
         </div>
       </div>
