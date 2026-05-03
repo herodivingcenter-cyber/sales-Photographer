@@ -325,6 +325,10 @@ header {
 }
 
 /* حقول الأسعار */
+.prices-grid {
+  display: contents; /* على الكمبيوتر تندمج مع form-grid العادية */
+}
+
 .price-input {
   font-size: 1rem !important;
   padding: 0.85rem 1rem !important;
@@ -541,9 +545,18 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
     border-radius: 8px;
   }
   .field label { font-size: 0.82rem !important; margin-bottom: 3px; }
+  /* شبكة 2×2 لحقول الأسعار على الموبايل */
+  .prices-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    grid-column: 1 / -1;
+  }
+  .prices-grid .field label { font-size: 0.75rem !important; }
   .price-input {
-    padding: 0.35rem 0.6rem !important;
+    padding: 0.4rem 0.5rem !important;
     font-size: 0.88rem !important;
+    text-align: center;
   }
   .btn-submit { padding: 0.75rem 1rem; font-size: 0.88rem; }
   .app-title { font-size: 0.82rem; }
@@ -907,21 +920,24 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             <label style="font-size:0.95rem;font-weight:700;">🚪 رقم الغرفة | Room Number</label>
             <input type="text" id="fRoom" placeholder="Room number..." style="font-size:1rem;padding:0.85rem 1rem;" />
           </div>
-          <div class="field">
-            <label style="font-size:0.95rem;font-weight:700;">🇪🇬 سعر جنيه | EGP Price</label>
-            <input type="number" id="fEGP" placeholder="0.00" min="0" step="0.01" class="price-input" style="background:#fff3cd;border:2px solid #f59e0b;color:#92400e;font-weight:700;" />
-          </div>
-          <div class="field">
-            <label style="font-size:0.95rem;font-weight:700;">🇺🇸 سعر دولار | USD Price</label>
-            <input type="number" id="fUSD" placeholder="0.00" min="0" step="0.01" class="price-input" style="background:#dbeafe;border:2px solid #3b82f6;color:#1e3a5f;font-weight:700;" />
-          </div>
-          <div class="field">
-            <label style="font-size:0.95rem;font-weight:700;">🇪🇺 سعر يورو | EUR Price</label>
-            <input type="number" id="fEUR" placeholder="0.00" min="0" step="0.01" class="price-input" style="background:#d1fae5;border:2px solid #10b981;color:#064e3b;font-weight:700;" />
-          </div>
-          <div class="field">
-            <label style="font-size:0.95rem;font-weight:700;">🇬🇧 سعر إسترليني | GBP Price</label>
-            <input type="number" id="fGBP" placeholder="0.00" min="0" step="0.01" class="price-input" style="background:#ede9fe;border:2px solid #8b5cf6;color:#3b0764;font-weight:700;" />
+          <!-- حقول الأسعار في شبكة 2×2 على الموبايل -->
+          <div class="prices-grid">
+            <div class="field">
+              <label style="font-size:0.95rem;font-weight:700;">🇪🇬 سعر جنيه | EGP</label>
+              <input type="number" id="fEGP" placeholder="0.00" min="0" step="0.01" class="price-input" style="background:#fff3cd;border:2px solid #f59e0b;color:#92400e;font-weight:700;" />
+            </div>
+            <div class="field">
+              <label style="font-size:0.95rem;font-weight:700;">🇺🇸 سعر دولار | USD</label>
+              <input type="number" id="fUSD" placeholder="0.00" min="0" step="0.01" class="price-input" style="background:#dbeafe;border:2px solid #3b82f6;color:#1e3a5f;font-weight:700;" />
+            </div>
+            <div class="field">
+              <label style="font-size:0.95rem;font-weight:700;">🇪🇺 سعر يورو | EUR</label>
+              <input type="number" id="fEUR" placeholder="0.00" min="0" step="0.01" class="price-input" style="background:#d1fae5;border:2px solid #10b981;color:#064e3b;font-weight:700;" />
+            </div>
+            <div class="field">
+              <label style="font-size:0.95rem;font-weight:700;">🇬🇧 سعر إسترليني | GBP</label>
+              <input type="number" id="fGBP" placeholder="0.00" min="0" step="0.01" class="price-input" style="background:#ede9fe;border:2px solid #8b5cf6;color:#3b0764;font-weight:700;" />
+            </div>
           </div>
           <div class="field">
             <label style="font-size:0.95rem;font-weight:700;">📧 إيميل البائع | Agent Email</label>
