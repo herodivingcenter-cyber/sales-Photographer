@@ -402,6 +402,10 @@ thead th {
   font-weight: 700;
   color: var(--text-dim);
   white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: var(--bg3);
+  z-index: 10;
 }
 
 tbody tr { border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.15s; }
@@ -1176,9 +1180,24 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             </button>
           </div>
         </div>
-        <div class="table-wrap">
+
+        <!-- إجماليات فوق الجدول -->
+        <div id="myTotalsBar" style="padding:0.7rem 1.2rem;background:rgba(59,130,246,0.08);border-bottom:1px solid var(--border);display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;">
+          <span style="font-weight:800;color:var(--accent2);font-size:0.85rem;">📊 الإجمالي:</span>
+          <span id="myTotEGP" style="color:#f59e0b;font-weight:700;font-size:0.85rem;"></span>
+          <span id="myTotUSD" style="color:#3b82f6;font-weight:700;font-size:0.85rem;"></span>
+          <span id="myTotEUR" style="color:#10b981;font-weight:700;font-size:0.85rem;"></span>
+          <span id="myTotGBP" style="color:#8b5cf6;font-weight:700;font-size:0.85rem;"></span>
+          <span style="color:var(--border);">|</span>
+          <span id="myTotAll" style="color:var(--gold);font-weight:900;font-size:0.9rem;"></span>
+          <span id="myTotComm" style="color:#10b981;font-weight:900;font-size:0.9rem;"></span>
+        </div>
+
+        <div class="table-wrap" style="max-height:70vh;overflow-y:auto;">
           <table>
-            <thead><tr><th>#</th><th>التاريخ | Date</th><th>الزبون | Customer</th><th>التليفون | Phone</th><th>المركب | Boat</th><th>الفندق | Hotel</th><th>الغرفة | Room</th><th>🇪🇬 جنيه</th><th>🇺🇸 دولار</th><th>🇪🇺 يورو</th><th>🇬🇧 إسترليني</th><th>🇪🇬 إجمالي جنيه</th><th>💰 35% عمولة</th></tr></thead>
+            <thead style="position:sticky;top:0;z-index:10;">
+              <tr><th>#</th><th>التاريخ | Date</th><th>الزبون | Customer</th><th>التليفون | Phone</th><th>المركب | Boat</th><th>الفندق | Hotel</th><th>الغرفة | Room</th><th>🇪🇬 جنيه</th><th>🇺🇸 دولار</th><th>🇪🇺 يورو</th><th>🇬🇧 إسترليني</th><th>🇪🇬 إجمالي جنيه</th><th>💰 35% عمولة</th></tr>
+            </thead>
             <tbody id="myTableBody"></tbody>
           </table>
           <div id="myEmpty" class="empty-msg" style="display:none;">
@@ -1220,9 +1239,23 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
           <span id="allResultCount" style="font-size:0.82rem;color:var(--text-dim);margin-right:auto;"></span>
         </div>
 
-        <div class="table-wrap">
+        <!-- إجماليات فوق الجدول -->
+        <div id="allTotalsBar" style="display:none;padding:0.7rem 1.2rem;background:rgba(59,130,246,0.08);border-bottom:1px solid var(--border);display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;">
+          <span style="font-weight:800;color:var(--accent2);font-size:0.85rem;">📊 الإجمالي:</span>
+          <span id="allTotEGP" style="color:#f59e0b;font-weight:700;font-size:0.85rem;"></span>
+          <span id="allTotUSD" style="color:#3b82f6;font-weight:700;font-size:0.85rem;"></span>
+          <span id="allTotEUR" style="color:#10b981;font-weight:700;font-size:0.85rem;"></span>
+          <span id="allTotGBP" style="color:#8b5cf6;font-weight:700;font-size:0.85rem;"></span>
+          <span style="color:var(--border);">|</span>
+          <span id="allTotAll" style="color:var(--gold);font-weight:900;font-size:0.9rem;"></span>
+          <span id="allTotComm" style="color:#10b981;font-weight:900;font-size:0.9rem;"></span>
+        </div>
+
+        <div class="table-wrap" style="max-height:70vh;overflow-y:auto;">
           <table>
-            <thead><tr><th>#</th><th>البائع | Seller</th><th>التاريخ | Date</th><th>الزبون | Customer</th><th>المركب | Boat</th><th>الفندق | Hotel</th><th>الغرفة | Room</th><th>🇪🇬 جنيه</th><th>🇺🇸 دولار</th><th>🇪🇺 يورو</th><th>🇬🇧 إسترليني</th><th>🇪🇬 إجمالي جنيه</th><th>💰 35% عمولة</th></tr></thead>
+            <thead style="position:sticky;top:0;z-index:10;">
+              <tr><th>#</th><th>البائع | Seller</th><th>التاريخ | Date</th><th>الزبون | Customer</th><th>المركب | Boat</th><th>الفندق | Hotel</th><th>الغرفة | Room</th><th>🇪🇬 جنيه</th><th>🇺🇸 دولار</th><th>🇪🇺 يورو</th><th>🇬🇧 إسترليني</th><th>🇪🇬 إجمالي جنيه</th><th>💰 35% عمولة</th></tr>
+            </thead>
             <tbody id="allTableBody"></tbody>
           </table>
           <div id="allEmpty" class="empty-msg" style="display:none;">
@@ -2285,6 +2318,19 @@ function renderMyTable(data) {
     </tr>`;
   }).join('');
 
+  // تحديث شريط الإجماليات فوق الجدول
+  const mTotEGP = rows.reduce((a,s)=>a+(parseFloat(s.egp)||0),0);
+  const mTotUSD = rows.reduce((a,s)=>a+(parseFloat(s.usd)||0),0);
+  const mTotEUR = rows.reduce((a,s)=>a+(parseFloat(s.eur)||0),0);
+  const mTotGBP = rows.reduce((a,s)=>a+(parseFloat(s.gbp)||0),0);
+  const mTotAll = rows.reduce((a,s)=>a+calcTotalEGP(s),0);
+  if(document.getElementById('myTotEGP')) document.getElementById('myTotEGP').textContent = mTotEGP>0?`🇪🇬 ${mTotEGP.toFixed(0)} ج`:'';
+  if(document.getElementById('myTotUSD')) document.getElementById('myTotUSD').textContent = mTotUSD>0?`🇺🇸 $${mTotUSD.toFixed(0)}`:'';
+  if(document.getElementById('myTotEUR')) document.getElementById('myTotEUR').textContent = mTotEUR>0?`🇪🇺 €${mTotEUR.toFixed(0)}`:'';
+  if(document.getElementById('myTotGBP')) document.getElementById('myTotGBP').textContent = mTotGBP>0?`🇬🇧 £${mTotGBP.toFixed(0)}`:'';
+  if(document.getElementById('myTotAll')) document.getElementById('myTotAll').textContent = mTotAll>0?`إجمالي: ${mTotAll.toFixed(0)} ج`:'';
+  if(document.getElementById('myTotComm')) document.getElementById('myTotComm').textContent = mTotAll>0?`💰 عمولة: ${(mTotAll*0.35).toFixed(0)} ج`:'';
+
   // صف الإجماليات
   const USD_RATE = 50, EUR_RATE = 55, GBP_RATE = 63;
   const totEGP = rows.reduce((a,s)=>a+(parseFloat(s.egp)||0),0);
@@ -2430,12 +2476,22 @@ function renderAllTable(data) {
     </tr>`;
   }).join('');
 
-  // صف الإجماليات
+  // صف الإجماليات + تحديث الشريط فوق الجدول
   const totEGP = data.reduce((a,s)=>a+(parseFloat(s.egp)||0),0);
   const totUSD = data.reduce((a,s)=>a+(parseFloat(s.usd)||0),0);
   const totEUR = data.reduce((a,s)=>a+(parseFloat(s.eur)||0),0);
   const totGBP = data.reduce((a,s)=>a+(parseFloat(s.gbp)||0),0);
   const totAll = data.reduce((a,s)=>a+calcTotalEGP(s),0);
+
+  // تحديث شريط الإجماليات فوق الجدول
+  const bar = document.getElementById('allTotalsBar');
+  if(bar) bar.style.display = 'flex';
+  if(document.getElementById('allTotEGP')) document.getElementById('allTotEGP').textContent = totEGP>0?`🇪🇬 ${totEGP.toFixed(0)} ج`:'';
+  if(document.getElementById('allTotUSD')) document.getElementById('allTotUSD').textContent = totUSD>0?`🇺🇸 $${totUSD.toFixed(0)}`:'';
+  if(document.getElementById('allTotEUR')) document.getElementById('allTotEUR').textContent = totEUR>0?`🇪🇺 €${totEUR.toFixed(0)}`:'';
+  if(document.getElementById('allTotGBP')) document.getElementById('allTotGBP').textContent = totGBP>0?`🇬🇧 £${totGBP.toFixed(0)}`:'';
+  if(document.getElementById('allTotAll')) document.getElementById('allTotAll').textContent = totAll>0?`إجمالي: ${totAll.toFixed(0)} ج`:'';
+  if(document.getElementById('allTotComm')) document.getElementById('allTotComm').textContent = totAll>0?`💰 عمولة: ${(totAll*0.35).toFixed(0)} ج`:'';
   tbody.innerHTML += `
     <tr style="background:rgba(59,130,246,0.1);border-top:2px solid var(--accent);font-weight:900;">
       <td colspan="7" style="text-align:center;color:var(--accent2);font-weight:800;">📊 الإجمالي</td>
