@@ -943,6 +943,13 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             <label style="font-size:0.95rem;font-weight:700;">📧 إيميل البائع | Agent Email</label>
             <input type="email" id="fEmail" readonly style="background:var(--bg4);color:var(--accent2);font-size:1rem;padding:0.85rem 1rem;" />
           </div>
+          <div class="field" style="grid-column: 1 / -1;">
+            <label style="font-size:0.95rem;font-weight:700;">📝 ملاحظات | Notes</label>
+            <textarea id="fNotes" placeholder="أي ملاحظات إضافية..." rows="3"
+              style="background:#e8e8e8;border:1px solid #cccccc;border-radius:10px;padding:0.85rem 1rem;color:#222222;font-family:'Tajawal',sans-serif;font-size:0.95rem;font-weight:600;outline:none;width:100%;resize:vertical;transition:border-color 0.2s;"
+              onfocus="this.style.borderColor='var(--accent)'"
+              onblur="this.style.borderColor='#cccccc'"></textarea>
+          </div>
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
           <button class="btn-submit" id="receiptBtn" onclick="submitAndSendReceipt()" style="background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 6px 20px rgba(37,211,102,0.3);">
@@ -1362,14 +1369,8 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
         </div>
       </div>
 
-      <div class="charts-grid">
-        <div class="chart-card"><h3>👤 مبيعات البائعين</h3><canvas id="cSeller" height="220"></canvas></div>
-        <div class="chart-card"><h3>🚢 المراكب الأكثر مبيعاً</h3><canvas id="cBoat" height="220"></canvas></div>
-        <div class="chart-card"><h3>📅 المبيعات اليومية</h3><canvas id="cDaily" height="220"></canvas></div>
-      </div>
-
-      <!-- Seller leaderboard -->
-      <div class="table-card">
+      <!-- Seller leaderboard أولاً -->
+      <div class="table-card" style="margin-bottom:1.2rem;">
         <div class="table-top"><h3>🏆 ترتيب البائعين</h3><button class="btn-sync" onclick="renderReports()">🔄 تحديث</button></div>
         <div class="table-wrap">
           <table>
@@ -1377,6 +1378,12 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             <tbody id="leaderBody"></tbody>
           </table>
         </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card"><h3>👤 مبيعات البائعين</h3><canvas id="cSeller" height="220"></canvas></div>
+        <div class="chart-card"><h3>🚢 المراكب الأكثر مبيعاً</h3><canvas id="cBoat" height="220"></canvas></div>
+        <div class="chart-card"><h3>📅 المبيعات اليومية</h3><canvas id="cDaily" height="220"></canvas></div>
       </div>
     </div>
 
@@ -1936,6 +1943,7 @@ function collectFormData() {
     usd: parseFloat(document.getElementById('fUSD').value) || 0,
     eur: parseFloat(document.getElementById('fEUR').value) || 0,
     gbp: parseFloat(document.getElementById('fGBP').value) || 0,
+    notes: document.getElementById('fNotes').value.trim(),
   };
 }
 
@@ -2094,6 +2102,7 @@ function buildSaleObject(d) {
     customerEmail: d.customerEmail,
     boat: d.boat, hotel: d.hotel, room: d.room,
     egp: d.egp, usd: d.usd, eur: d.eur, gbp: d.gbp,
+    notes: d.notes || '',
     rateUSD: rates.usd,
     rateEUR: rates.eur,
     rateGBP: rates.gbp,
@@ -2102,7 +2111,7 @@ function buildSaleObject(d) {
 }
 
 function clearForm() {
-  ['fCustomer','fPhone','fCustomerEmail','fHotel','fRoom','fEGP','fUSD','fEUR','fGBP'].forEach(id => {
+  ['fCustomer','fPhone','fCustomerEmail','fHotel','fRoom','fEGP','fUSD','fEUR','fGBP','fNotes'].forEach(id => {
     document.getElementById(id).value = '';
   });
   document.getElementById('fBoat').value = '';
@@ -2261,6 +2270,24 @@ function renderMyTable(data) {
       <td class="amount" style="color:#10b981;font-weight:800;">${totalEGP > 0 ? (totalEGP * 0.35).toFixed(0) + ' ج' : '-'}</td>
     </tr>`;
   }).join('');
+
+  // صف الإجماليات
+  const USD_RATE = 50, EUR_RATE = 55, GBP_RATE = 63;
+  const totEGP = rows.reduce((a,s)=>a+(parseFloat(s.egp)||0),0);
+  const totUSD = rows.reduce((a,s)=>a+(parseFloat(s.usd)||0),0);
+  const totEUR = rows.reduce((a,s)=>a+(parseFloat(s.eur)||0),0);
+  const totGBP = rows.reduce((a,s)=>a+(parseFloat(s.gbp)||0),0);
+  const totAll = rows.reduce((a,s)=>a+calcTotalEGP(s),0);
+  tbody.innerHTML += `
+    <tr style="background:rgba(59,130,246,0.1);border-top:2px solid var(--accent);font-weight:900;">
+      <td colspan="7" style="text-align:center;color:var(--accent2);font-weight:800;">📊 الإجمالي</td>
+      <td class="amount" style="color:#f59e0b;">${totEGP > 0 ? totEGP.toFixed(2)+' ج' : '-'}</td>
+      <td class="amount" style="color:#3b82f6;">${totUSD > 0 ? totUSD.toFixed(2)+' $' : '-'}</td>
+      <td class="amount" style="color:#10b981;">${totEUR > 0 ? totEUR.toFixed(2)+' €' : '-'}</td>
+      <td class="amount" style="color:#8b5cf6;">${totGBP > 0 ? totGBP.toFixed(2)+' £' : '-'}</td>
+      <td class="amount" style="color:var(--gold);font-size:1rem;">${totAll > 0 ? totAll.toFixed(0)+' ج' : '-'}</td>
+      <td class="amount" style="color:#10b981;font-size:1rem;">${totAll > 0 ? (totAll*0.35).toFixed(0)+' ج' : '-'}</td>
+    </tr>`;
 }
 
 // استخراج YYYY-MM-DD من أي صيغة
