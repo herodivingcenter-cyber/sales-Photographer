@@ -1166,7 +1166,15 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
       <div class="table-card">
         <div class="table-top">
           <h3>📋 مبيعاتي</h3>
-          <span id="myResultCount" style="font-size:0.82rem;color:var(--text-dim);"></span>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <span id="myResultCount" style="font-size:0.82rem;color:var(--text-dim);"></span>
+            <button onclick="exportPDF('my')" style="background:linear-gradient(135deg,#dc2626,#991b1b);color:white;border:none;border-radius:10px;padding:0.5rem 1rem;font-family:'Tajawal',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(220,38,38,0.3);">
+              📄 PDF
+            </button>
+            <button onclick="sendPDFWhatsApp('my')" style="background:linear-gradient(135deg,#25d366,#128c7e);color:white;border:none;border-radius:10px;padding:0.5rem 1rem;font-family:'Tajawal',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(37,211,102,0.3);">
+              📱 واتساب
+            </button>
+          </div>
         </div>
         <div class="table-wrap">
           <table>
@@ -1192,6 +1200,12 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
             <button onclick="exportToExcel()" style="background:linear-gradient(135deg,#217346,#1a5c38);color:white;border:none;border-radius:10px;padding:0.5rem 1.1rem;font-family:'Tajawal',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;box-shadow:0 4px 12px rgba(33,115,70,0.3);">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
               حفظ Excel
+            </button>
+            <button onclick="exportPDF('all')" style="background:linear-gradient(135deg,#dc2626,#991b1b);color:white;border:none;border-radius:10px;padding:0.5rem 1rem;font-family:'Tajawal',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(220,38,38,0.3);">
+              📄 PDF
+            </button>
+            <button onclick="sendPDFWhatsApp('all')" style="background:linear-gradient(135deg,#25d366,#128c7e);color:white;border:none;border-radius:10px;padding:0.5rem 1rem;font-family:'Tajawal',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(37,211,102,0.3);">
+              📱 واتساب
             </button>
           </div>
         </div>
@@ -2415,6 +2429,23 @@ function renderAllTable(data) {
       <td class="amount" style="color:#10b981;font-weight:800;">${commission > 0 ? commission.toFixed(0) + ' ج' : '-'}</td>
     </tr>`;
   }).join('');
+
+  // صف الإجماليات
+  const totEGP = data.reduce((a,s)=>a+(parseFloat(s.egp)||0),0);
+  const totUSD = data.reduce((a,s)=>a+(parseFloat(s.usd)||0),0);
+  const totEUR = data.reduce((a,s)=>a+(parseFloat(s.eur)||0),0);
+  const totGBP = data.reduce((a,s)=>a+(parseFloat(s.gbp)||0),0);
+  const totAll = data.reduce((a,s)=>a+calcTotalEGP(s),0);
+  tbody.innerHTML += `
+    <tr style="background:rgba(59,130,246,0.1);border-top:2px solid var(--accent);font-weight:900;">
+      <td colspan="7" style="text-align:center;color:var(--accent2);font-weight:800;">📊 الإجمالي</td>
+      <td class="amount" style="color:#f59e0b;font-weight:900;">${totEGP > 0 ? totEGP.toFixed(2)+' ج' : '-'}</td>
+      <td class="amount" style="color:#3b82f6;font-weight:900;">${totUSD > 0 ? totUSD.toFixed(2)+' $' : '-'}</td>
+      <td class="amount" style="color:#10b981;font-weight:900;">${totEUR > 0 ? totEUR.toFixed(2)+' €' : '-'}</td>
+      <td class="amount" style="color:#8b5cf6;font-weight:900;">${totGBP > 0 ? totGBP.toFixed(2)+' £' : '-'}</td>
+      <td class="amount" style="color:var(--gold);font-weight:900;font-size:1rem;">${totAll > 0 ? totAll.toFixed(0)+' ج' : '-'}</td>
+      <td class="amount" style="color:#10b981;font-weight:900;font-size:1rem;">${totAll > 0 ? (totAll*0.35).toFixed(0)+' ج' : '-'}</td>
+    </tr>`;
 }
 
 function populateAllSellerFilter() {
@@ -2798,6 +2829,147 @@ function calcTotalEGP(s) {
          (parseFloat(s.gbp)||0) * gbpRate;
 }
 
+
+// ========== PDF EXPORT ==========
+function getPDFData(type) {
+  if (type === 'my') return mySalesData;
+  const seller = document.getElementById('allSellerFilter')?.value || '';
+  const dateVal = document.getElementById('allDateFilter')?.value || '';
+  let data = allSalesData.slice();
+  if (seller) data = data.filter(s => s.seller === seller);
+  if (dateVal) data = data.filter(s => matchDate(s, dateVal));
+  return data;
+}
+
+function exportPDF(type) {
+  const data = getPDFData(type);
+  if (!data.length) { showToast('⚠️ لا توجد بيانات', 'error'); return; }
+
+  const title = type === 'my' ? `مبيعاتي — ${currentUser.name}` : 'كل المبيعات';
+  const today = new Date().toLocaleDateString('ar-EG');
+  const totEGP = data.reduce((a,s)=>a+(parseFloat(s.egp)||0),0);
+  const totUSD = data.reduce((a,s)=>a+(parseFloat(s.usd)||0),0);
+  const totEUR = data.reduce((a,s)=>a+(parseFloat(s.eur)||0),0);
+  const totGBP = data.reduce((a,s)=>a+(parseFloat(s.gbp)||0),0);
+  const totAll = data.reduce((a,s)=>a+calcTotalEGP(s),0);
+
+  const rows = data.slice().reverse().map((s,i) => {
+    const tot = calcTotalEGP(s);
+    return `<tr>
+      <td>${i+1}</td>
+      ${type==='all'?`<td>${s.seller||'-'}</td>`:''}
+      <td>${fmtDate(s.date||s.dateISO)}</td>
+      <td>${s.customer||'-'}</td>
+      <td>${s.phone||'-'}</td>
+      <td>${s.boat||'-'}</td>
+      <td>${s.hotel||'-'}</td>
+      <td>${parseFloat(s.egp)>0?parseFloat(s.egp).toFixed(2)+' ج':'-'}</td>
+      <td>${parseFloat(s.usd)>0?'$'+parseFloat(s.usd).toFixed(2):'-'}</td>
+      <td>${parseFloat(s.eur)>0?'€'+parseFloat(s.eur).toFixed(2):'-'}</td>
+      <td>${parseFloat(s.gbp)>0?'£'+parseFloat(s.gbp).toFixed(2):'-'}</td>
+      <td>${tot>0?tot.toFixed(0)+' ج':'-'}</td>
+      <td>${tot>0?(tot*0.35).toFixed(0)+' ج':'-'}</td>
+    </tr>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html>
+<html dir="rtl"><head><meta charset="UTF-8"><title>${title}</title>
+<style>
+  body{font-family:Arial,sans-serif;font-size:11px;margin:20px;direction:rtl;}
+  h2{color:#1e40af;text-align:center;margin-bottom:5px;}
+  .sub{text-align:center;color:#666;margin-bottom:15px;font-size:10px;}
+  table{width:100%;border-collapse:collapse;margin-top:10px;}
+  th{background:#1e40af;color:white;padding:6px 4px;text-align:center;font-size:10px;}
+  td{padding:5px 4px;border:1px solid #ddd;text-align:center;}
+  tr:nth-child(even){background:#f0f4ff;}
+  .total-row{background:#1e40af!important;color:white;font-weight:bold;}
+  .total-row td{color:white;border-color:#1e40af;}
+  .summary{margin-top:15px;padding:10px;background:#f0f4ff;border-radius:8px;}
+  .summary h3{margin:0 0 8px;color:#1e40af;font-size:12px;}
+  .sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .si{background:white;padding:8px;border-radius:6px;text-align:center;}
+  .si .val{font-size:14px;font-weight:bold;color:#1e40af;}
+  .si .lbl{font-size:9px;color:#666;}
+  @media print{button{display:none;}}
+</style></head><body>
+  <h2>🤿 HERO DIVING CENTER — ${title}</h2>
+  <div class="sub">تاريخ التقرير: ${today} | عدد السجلات: ${data.length}</div>
+  <div class="summary">
+    <h3>📊 ملخص الإجماليات</h3>
+    <div class="sg">
+      <div class="si"><div class="val">${totEGP.toFixed(0)} ج</div><div class="lbl">🇪🇬 جنيه</div></div>
+      <div class="si"><div class="val">$${totUSD.toFixed(0)}</div><div class="lbl">🇺🇸 دولار</div></div>
+      <div class="si"><div class="val">€${totEUR.toFixed(0)}</div><div class="lbl">🇪🇺 يورو</div></div>
+      <div class="si"><div class="val">£${totGBP.toFixed(0)}</div><div class="lbl">🇬🇧 إسترليني</div></div>
+      <div class="si"><div class="val">${totAll.toFixed(0)} ج</div><div class="lbl">🇪🇬 إجمالي بالجنيه</div></div>
+      <div class="si"><div class="val">${(totAll*0.35).toFixed(0)} ج</div><div class="lbl">💰 عمولة 35%</div></div>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>#</th>${type==='all'?'<th>البائع</th>':''}<th>التاريخ</th><th>الزبون</th><th>التليفون</th><th>المركب</th><th>الفندق</th><th>جنيه</th><th>دولار</th><th>يورو</th><th>إسترليني</th><th>إجمالي ج</th><th>عمولة 35%</th></tr></thead>
+    <tbody>${rows}</tbody>
+    <tr class="total-row">
+      <td colspan="${type==='all'?6:5}">📊 الإجمالي</td>
+      <td>${totEGP.toFixed(0)} ج</td><td>$${totUSD.toFixed(0)}</td>
+      <td>€${totEUR.toFixed(0)}</td><td>£${totGBP.toFixed(0)}</td>
+      <td>${totAll.toFixed(0)} ج</td><td>${(totAll*0.35).toFixed(0)} ج</td>
+    </tr>
+  </table>
+  <script>window.onload=()=>window.print();<\/script>
+</body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  showToast('✅ جاري فتح PDF للطباعة...', 'success');
+}
+
+function sendPDFWhatsApp(type) {
+  const data = getPDFData(type);
+  if (!data.length) { showToast('⚠️ لا توجد بيانات', 'error'); return; }
+
+  const totEGP = data.reduce((a,s)=>a+(parseFloat(s.egp)||0),0);
+  const totUSD = data.reduce((a,s)=>a+(parseFloat(s.usd)||0),0);
+  const totEUR = data.reduce((a,s)=>a+(parseFloat(s.eur)||0),0);
+  const totGBP = data.reduce((a,s)=>a+(parseFloat(s.gbp)||0),0);
+  const totAll = data.reduce((a,s)=>a+calcTotalEGP(s),0);
+  const today = new Date().toLocaleDateString('ar-EG');
+  const title = type === 'my' ? `مبيعاتي — ${currentUser.name}` : 'كل المبيعات';
+
+  const rows = data.slice().reverse().map((s,i) => {
+    const tot = calcTotalEGP(s);
+    const prices = [];
+    if (parseFloat(s.egp)>0) prices.push(`${parseFloat(s.egp).toFixed(0)}ج`);
+    if (parseFloat(s.usd)>0) prices.push(`$${parseFloat(s.usd).toFixed(0)}`);
+    if (parseFloat(s.eur)>0) prices.push(`€${parseFloat(s.eur).toFixed(0)}`);
+    if (parseFloat(s.gbp)>0) prices.push(`£${parseFloat(s.gbp).toFixed(0)}`);
+    return `${i+1}. ${s.customer||'-'} | ${fmtDate(s.date||s.dateISO)} | ${s.boat||'-'} | ${prices.join('+')} | ${tot.toFixed(0)}ج`;
+  }).join('\n');
+
+  const msg =
+`🤿 *HERO DIVING CENTER*
+📊 *تقرير ${title}*
+📅 ${today} | ${data.length} سجل
+━━━━━━━━━━━━━━━━━━━━
+${rows}
+━━━━━━━━━━━━━━━━━━━━
+💰 *الإجماليات:*
+🇪🇬 جنيه: ${totEGP.toFixed(0)} ج
+🇺🇸 دولار: $${totUSD.toFixed(0)}
+🇪🇺 يورو: €${totEUR.toFixed(0)}
+🇬🇧 إسترليني: £${totGBP.toFixed(0)}
+🇪🇬 إجمالي: ${totAll.toFixed(0)} ج
+💰 عمولة 35%: ${(totAll*0.35).toFixed(0)} ج`;
+
+  const a = document.createElement('a');
+  a.href = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => document.body.removeChild(a), 100);
+  showToast('✅ جاري فتح واتساب...', 'success');
+}
 
 function exportToExcel() {
   const seller = document.getElementById('allSellerFilter')?.value || '';
