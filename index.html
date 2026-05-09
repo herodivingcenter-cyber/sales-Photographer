@@ -1196,7 +1196,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
         <div class="table-wrap" style="max-height:70vh;overflow-y:auto;">
           <table>
             <thead style="position:sticky;top:0;z-index:10;">
-              <tr><th>#</th><th>التاريخ | Date</th><th>الزبون | Customer</th><th>التليفون | Phone</th><th>المركب | Boat</th><th>الفندق | Hotel</th><th>الغرفة | Room</th><th>🇪🇬 جنيه</th><th>🇺🇸 دولار</th><th>🇪🇺 يورو</th><th>🇬🇧 إسترليني</th><th>🇪🇬 إجمالي جنيه</th><th>💰 35% عمولة</th></tr>
+              <tr><th>#</th><th>التاريخ | Date</th><th>الزبون | Customer</th><th>التليفون | Phone</th><th>المركب | Boat</th><th>الفندق | Hotel</th><th>الغرفة | Room</th><th>🇪🇬 جنيه</th><th>🇺🇸 دولار</th><th>🇪🇺 يورو</th><th>🇬🇧 إسترليني</th><th>🇪🇬 إجمالي جنيه</th><th>💰 35% عمولة</th><th>📝 ملاحظات</th></tr>
             </thead>
             <tbody id="myTableBody"></tbody>
           </table>
@@ -1254,7 +1254,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
         <div class="table-wrap" style="max-height:70vh;overflow-y:auto;">
           <table>
             <thead style="position:sticky;top:0;z-index:10;">
-              <tr><th>#</th><th>البائع | Seller</th><th>التاريخ | Date</th><th>الزبون | Customer</th><th>المركب | Boat</th><th>الفندق | Hotel</th><th>الغرفة | Room</th><th>🇪🇬 جنيه</th><th>🇺🇸 دولار</th><th>🇪🇺 يورو</th><th>🇬🇧 إسترليني</th><th>🇪🇬 إجمالي جنيه</th><th>💰 35% عمولة</th></tr>
+              <tr><th>#</th><th>البائع | Seller</th><th>التاريخ | Date</th><th>الزبون | Customer</th><th>المركب | Boat</th><th>الفندق | Hotel</th><th>الغرفة | Room</th><th>🇪🇬 جنيه</th><th>🇺🇸 دولار</th><th>🇪🇺 يورو</th><th>🇬🇧 إسترليني</th><th>🇪🇬 إجمالي جنيه</th><th>💰 35% عمولة</th><th>📝 ملاحظات</th></tr>
             </thead>
             <tbody id="allTableBody"></tbody>
           </table>
@@ -2319,6 +2319,7 @@ function renderMyTable(data) {
       <td class="amount">${parseFloat(s.gbp) > 0 ? parseFloat(s.gbp).toFixed(2) + ' £' : '-'}</td>
       <td class="amount" style="color:var(--gold);font-weight:800;">${totalEGP > 0 ? totalEGP.toFixed(0) + ' ج' : '-'}</td>
       <td class="amount" style="color:#10b981;font-weight:800;">${totalEGP > 0 ? (totalEGP * 0.35).toFixed(0) + ' ج' : '-'}</td>
+      <td style="color:var(--text-dim);font-size:0.82rem;max-width:150px;white-space:normal;">${s.notes || '-'}</td>
     </tr>`;
   }).join('');
 
@@ -2351,6 +2352,7 @@ function renderMyTable(data) {
       <td class="amount" style="color:#8b5cf6;">${totGBP > 0 ? totGBP.toFixed(2)+' £' : '-'}</td>
       <td class="amount" style="color:var(--gold);font-size:1rem;">${totAll > 0 ? totAll.toFixed(0)+' ج' : '-'}</td>
       <td class="amount" style="color:#10b981;font-size:1rem;">${totAll > 0 ? (totAll*0.35).toFixed(0)+' ج' : '-'}</td>
+      <td></td>
     </tr>`;
 }
 
@@ -2477,6 +2479,7 @@ function renderAllTable(data) {
       <td class="amount">${parseFloat(s.gbp) > 0 ? '£' + parseFloat(s.gbp).toFixed(2) : '-'}</td>
       <td class="amount" style="color:var(--gold);font-weight:800;">${totalEGP > 0 ? totalEGP.toFixed(0) + ' ج' : '-'}</td>
       <td class="amount" style="color:#10b981;font-weight:800;">${commission > 0 ? commission.toFixed(0) + ' ج' : '-'}</td>
+      <td style="color:var(--text-dim);font-size:0.82rem;max-width:150px;white-space:normal;">${s.notes || '-'}</td>
     </tr>`;
   }).join('');
 
@@ -2505,6 +2508,7 @@ function renderAllTable(data) {
       <td class="amount" style="color:#8b5cf6;font-weight:900;">${totGBP > 0 ? totGBP.toFixed(2)+' £' : '-'}</td>
       <td class="amount" style="color:var(--gold);font-weight:900;font-size:1rem;">${totAll > 0 ? totAll.toFixed(0)+' ج' : '-'}</td>
       <td class="amount" style="color:#10b981;font-weight:900;font-size:1rem;">${totAll > 0 ? (totAll*0.35).toFixed(0)+' ج' : '-'}</td>
+      <td></td>
     </tr>`;
 }
 
