@@ -1121,16 +1121,16 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
     <!-- MY SALES -->
     <div id="panel-my" class="tab-panel">
 
-      <!-- فلتر التاريخ - يوم واحد -->
-      <div class="form-card" style="margin-bottom:1rem;padding:1rem 1.5rem;">
-        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-          <span style="font-size:0.9rem;font-weight:700;color:var(--accent2);">🔍 بحث بالتاريخ:</span>
-          <input type="date" id="myDateFilter" style="background:#e8e8e8;border:1px solid #cccccc;border-radius:8px;padding:0.5rem 0.8rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:ltr;font-size:0.85rem;" />
-          <button class="btn-sync" onclick="filterMyTable()" style="padding:0.5rem 1rem;">🔍 بحث</button>
-          <button class="btn-sync" onclick="clearMyFilter()" style="padding:0.5rem 1rem;">✖ مسح</button>
-          <div class="loading" id="myLoading" style="display:none;"><div class="spinner"></div></div>
-          <button class="btn-sync" onclick="loadMySales()" style="margin-right:auto;">🔄 تحديث</button>
+      <!-- فلتر التاريخ -->
+      <div class="form-card" style="margin-bottom:1rem;padding:0.8rem 1rem;">
+        <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:0.5rem;align-items:center;">
+          <input type="date" id="myDateFilter"
+            style="background:#e8e8e8;border:1px solid #cccccc;border-radius:8px;padding:0.5rem 0.7rem;color:#222222;font-family:'Tajawal',sans-serif;outline:none;direction:ltr;font-size:0.85rem;width:100%;" />
+          <button class="btn-sync" onclick="filterMyTable()" style="padding:0.5rem 0.8rem;white-space:nowrap;">🔍 بحث</button>
+          <button class="btn-sync" onclick="clearMyFilter()" style="padding:0.5rem 0.8rem;white-space:nowrap;">✖ مسح</button>
+          <button class="btn-sync" onclick="loadMySales()" style="padding:0.5rem 0.8rem;white-space:nowrap;">🔄</button>
         </div>
+        <div class="loading" id="myLoading" style="display:none;margin-top:0.5rem;"><div class="spinner"></div></div>
       </div>
 
       <!-- إجماليات نتائج الفلترة -->
@@ -2050,8 +2050,6 @@ _Thank you for choosing Hero Diving Center!_ 🌊🤿`;
   document.body.appendChild(a);
   a.click();
   setTimeout(() => document.body.removeChild(a), 100);
-
-  btn.disabled = false;
   btn.innerHTML = '📱 تسجيل + إرسال واتساب';
   clearForm();
   updateMyStats();
@@ -2067,13 +2065,18 @@ async function submitAndSendReceipt() {
   const sale = buildSaleObject(d);
   await saveSale(sale);
 
-  // تنظيف رقم التليفون — إزالة كل شيء غير أرقام ما عدا +
-  let phone = sale.phone.replace(/[^\d]/g, '');
-  
-  // إذا بدأ بـ 0 نستبدلها بـ 20 (كود مصر)
-  if (phone.startsWith('0')) {
-    phone = '20' + phone.slice(1);
-  }
+  // تنظيف رقم التليفون - يقبل كل أرقام العالم
+  let rawPhone = sale.phone || '';
+  // إزالة كل شيء غير أرقام و + و مسافات و - و ( و )
+  let phone = rawPhone.replace(/[^\d+]/g, '');
+  // إذا بدأ بـ 00 حوّله لـ +
+  if (phone.startsWith('00')) phone = '+' + phone.slice(2);
+  // إذا بدأ بـ 0 وليس دولي أضف كود مصر
+  if (phone.startsWith('0') && !phone.startsWith('00')) phone = '20' + phone.slice(1);
+  // إذا لا يوجد + في البداية ولا يبدأ بـ 20 أضف +
+  if (!phone.startsWith('+') && !phone.startsWith('20')) phone = '+' + phone;
+  // إزالة + من البداية للـ wa.me
+  const finalPhone = phone.replace(/^\+/, '');
 
   // بناء رسالة الإيصال
   const prices = [];
@@ -2103,7 +2106,7 @@ ${prices.length ? prices.join('\n') : 'To be confirmed'}
 _Thank you for choosing Hero Diving Center!_ 🌊🤿`;
 
   // فتح واتساب مباشرة بدون الخروج من البرنامج
-  const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  const waUrl = `https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}`;
   const a = document.createElement('a');
   a.href = waUrl;
   a.target = '_blank';
