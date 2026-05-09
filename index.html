@@ -1552,7 +1552,7 @@ tbody td { padding: 0.9rem 1.1rem; font-size: 0.88rem; white-space: nowrap; }
 let currentUser = null;
 let isAdmin = false;
 // الرابط مثبت — لا يحتاج الموظفون لكتابته
-const FIXED_API_URL = 'https://script.google.com/macros/s/AKfycbyjPyF2g5Q6T96vosrYT_926RHCuBMqyISPYyCBEzlePG8vY7zkErDGP8Dr9CTI78BDvQ/exec';
+const FIXED_API_URL = 'https://script.google.com/macros/s/AKfycbzY-6e-zvkOyuzejwkdWav-GF3_FJrRGPZ3zRh1cirRvMwTTpRu4LqXujTTSm_Y3iMnLw/exec';
 let apiUrl = FIXED_API_URL;
 let allSalesData = [];
 let mySalesData = [];
@@ -2287,6 +2287,7 @@ function normalizeRow(r) {
     rateUSD: parseFloat(r['rateUSD'] || r.rate_usd) || 0,
     rateEUR: parseFloat(r['rateEUR'] || r.rate_eur) || 0,
     rateGBP: parseFloat(r['rateGBP'] || r.rate_gbp) || 0,
+    notes: r['ملاحظات'] || r.notes || '',
   };
 }
 
